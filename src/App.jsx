@@ -2,9 +2,36 @@ import { useState } from 'react'
 import './App.css'
 import Card from './components/Card'
 
+function handleClick(){
+  alert("ciao");
+}
+
+function handleChange(e){
+  console.log(e.target.value);
+}
+
+function handleSubmit(e){
+  e.preventDefault();
+  console.log(e);
+}
 
 function App() {
   const [count, setCount] = useState(0);
+  const [items, setItems] = useState([1,2,3]);
+  const [user, setUser] = useState({ name: "Alice", age : 30});
+  console.log(items);
+
+  const aggiungiItem = () => {
+    const nuovoItem = 4;
+    setItems([...items, nuovoItem])
+    console.log(items);
+  }
+  const updateUserName = () => {
+    const nuovoItem = 4;
+    setItems([...items, nuovoItem])
+    console.log(items);
+  }
+
   const cities = [
     {
       id: 0,
@@ -72,6 +99,20 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+
+        <button onClick={aggiungiItem}>
+          prova
+        </button>
+
+        <button onClick={handleClick}>
+          alert
+        </button>
+
+        <input type='text' onChange={handleChange}/>
+
+        <form onSubmit={handleSubmit}>
+          <button type='submit'>invia</button>
+        </form>
       </div>
     </>
   )
