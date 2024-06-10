@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Card from './components/Card'
+import CardForm from './components/CardForm';
 
 function handleClick(){
   alert("ciao");
@@ -19,7 +20,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [items, setItems] = useState([1,2,3]);
   const [user, setUser] = useState({ name: "Alice", age : 30});
-  console.log(items);
+
 
   const aggiungiItem = () => {
     const nuovoItem = 4;
@@ -27,12 +28,11 @@ function App() {
     console.log(items);
   }
   const updateUserName = () => {
-    const nuovoItem = 4;
-    setItems([...items, nuovoItem])
-    console.log(items);
+    const updateUser ={...user, name: "Bob"};
+    setUser(updateUser)
   }
 
-  const cities = [
+  const [cities, setCities] = useState ([
     {
       id: 0,
       name: "Tokyo",
@@ -61,10 +61,16 @@ function App() {
       imgURL: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       isVisited: false,
     },
-  ]
+  ]);
+
+  const addCity = (city) => {
+    setCities([...cities, city])
+  };
 
   return (
     <>
+      <CardForm addCity={addCity}></CardForm>
+
       <div className='grid grid-cols-4 gap-10'>
 
         {cities.map((city) => (
@@ -79,7 +85,7 @@ function App() {
 
         ))}
 
-        {cities
+        {/* {cities
           .filter((city) => city.isVisited)
           .map((city) => (
 
@@ -91,27 +97,27 @@ function App() {
                {city.description}
             </Card>
 
-        ))}
+        ))} */}
 
       </div>
 
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button className='m-2' onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
 
-        <button onClick={aggiungiItem}>
+        <button className='m-2' onClick={aggiungiItem}>
           prova
         </button>
 
-        <button onClick={handleClick}>
+        <button className='m-2' onClick={handleClick}>
           alert
         </button>
 
-        <input type='text' onChange={handleChange}/>
+        <input className='m-2' type='text' onChange={handleChange}/>
 
         <form onSubmit={handleSubmit}>
-          <button type='submit'>invia</button>
+          <button className='m-2' type='submit'>invia</button>
         </form>
       </div>
     </>
