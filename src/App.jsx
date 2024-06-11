@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import Card from './components/Card'
 import CardForm from './components/CardForm';
+import Example from './components/Example';
 
 function handleClick(){
   alert("ciao");
@@ -20,6 +21,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [items, setItems] = useState([1,2,3]);
   const [user, setUser] = useState({ name: "Alice", age : 30});
+  const [data, setData] = useState([]);
 
 
   const aggiungiItem = () => {
@@ -31,6 +33,42 @@ function App() {
     const updateUser ={...user, name: "Bob"};
     setUser(updateUser)
   }
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => response.json())
+      .then((data) => {setData(data); console.log(data);})
+  }, [count]); // cosi si lancia l'useEffect quando modifica [count], se usiamo [] lancia useEffect solo al caricamento, se non mettiamo nulla lancia useEffect a qualsiasi modifica
+
+  // Chiamate http per ELIMINARE ad esempio un post specifico
+  // useEffect(() => {
+  //   fetch("https://jsonplaceholder.typicode.com/posts/1", {
+  //     method: 'DELATE',
+  //   })
+  //     .then((response) => response.status == 200 ? mando a scermo il messaggio "è stato eliminato" : manda l'errore che verra preso dal catch).catch (da capire come gestire l'errore)
+  // }, [count]); 
+
+  // Chiamate http aggiunta per esempio utente ad ogni modifica del count
+  // useEffect(() => {
+  //   fetch("https://jsonplaceholder.typicode.com/users", {
+  //     method: 'POST',
+  //     body: JSON.stringify({}),
+  //     headers: {'Content-Type': 'application/json; charset=UTF-8'},
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {setData(data); console.log(data);})
+  // }, [count]);
+
+  // Chiamate http modifica per esempio un utente ad ogni modifica del count
+  // useEffect(() => {
+  //   fetch(`https://jsonplaceholder.typicode.com/users/${idutente}`, {
+  //     method: 'PUT',
+  //     body: JSON.stringify({}),
+  //     headers: {'Content-Type': 'application/json; charset=UTF-8'},
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {setData(data); console.log(data);})
+  // }, [count]);
 
   const [cities, setCities] = useState ([
     {
@@ -69,6 +107,8 @@ function App() {
 
   return (
     <>
+
+      <Example cities={cities}></Example>
       <CardForm addCity={addCity}></CardForm>
 
       <div className='grid grid-cols-4 gap-10'>
@@ -101,7 +141,22 @@ function App() {
 
       </div>
 
-      <div className="card">
+      <div className='grid grid-cols-4 gap-10'>
+
+        {data.map((item) => (
+
+          <div key={item.id} className='bg-slate-400 rounded-lg p-3'>
+            <p className='text-red-500 mb-1'>userid: {item.userId}</p>
+            <p className='text-white text-xl font-bold mb-3'>{item.title}</p>
+            <p className='text-gray-800'>{item.body}</p>
+          </div>
+
+        ))}
+
+
+      </div>
+
+      {/* <div className="card">
         <button className='m-2' onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
@@ -119,7 +174,7 @@ function App() {
         <form onSubmit={handleSubmit}>
           <button className='m-2' type='submit'>invia</button>
         </form>
-      </div>
+      </div> */}
     </>
   )
 }
