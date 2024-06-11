@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useReducer } from 'react'
 import './App.css'
 import Card from './components/Card'
 import CardForm from './components/CardForm';
@@ -17,11 +17,23 @@ function handleSubmit(e){
   console.log(e);
 }
 
+function formReducer(state, action){
+  switch(action.type){
+    case "CHANGE_FIELD":
+      return {...state, [action.field]: action.value};
+    case "RESET_FORM":
+      return {name: "", email: ""};
+    default:
+      return state;
+    }
+}
+
 function App() {
   const [count, setCount] = useState(0);
   const [items, setItems] = useState([1,2,3]);
   const [user, setUser] = useState({ name: "Alice", age : 30});
   const [data, setData] = useState([]);
+  const [formState, dispatchFormState] = useReducer(formReducer, {name: "", email: ""});
 
 
   const aggiungiItem = () => {
@@ -69,6 +81,22 @@ function App() {
   //     .then((response) => response.json())
   //     .then((data) => {setData(data); console.log(data);})
   // }, [count]);
+
+  const handleFieldChange = (field, value) => {
+    dispatchFormState({type: "CHANGE_FIELD", field, value});
+  }
+
+  const resetForm = (e) => {
+    e.preventDefault();
+    dispatchFormState({type: "RESET_FORM"});
+  }
+
+  const sendForm = (e) => {
+    e.preventDefault();
+    console.log(formState);
+  }
+
+
 
   const [cities, setCities] = useState ([
     {
@@ -153,7 +181,6 @@ function App() {
 
         ))}
 
-
       </div>
 
       {/* <div className="card">
@@ -175,6 +202,32 @@ function App() {
           <button className='m-2' type='submit'>invia</button>
         </form>
       </div> */}
+
+      <form className='flex flex-col gap-3 w-80 mt-10'>
+        <div>
+          <label className='text-white' htmlFor="name">Nome:</label>
+          <input 
+            type="text"
+            id='name'
+            name='name'
+            value={formState.name}
+            onChange={(e) => handleFieldChange("name", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className='text-white' htmlFor="email">Email:</label>
+          <input 
+            type="email"
+            id='email'
+            name='email'
+            value={formState.email}
+            onChange={(e) => handleFieldChange("email", e.target.value)}
+          />
+        </div>
+        <button onClick={resetForm}>Reset</button>
+        <button onClick={sendForm}>Invia</button>
+      </form>
+
     </>
   )
 }
