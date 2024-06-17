@@ -1,8 +1,9 @@
-import { useState, useEffect, useReducer } from 'react'
+import { useState, useEffect, useReducer, useContext} from 'react'
 import './App.css'
 import Card from './components/Card'
 import CardForm from './components/CardForm';
 import Example from './components/Example';
+import { ProvaContext } from './store/ProvaContext';
 
 function handleClick(){
   alert("ciao");
@@ -134,7 +135,7 @@ function App() {
   };
 
   return (
-    <>
+    <ProvaContext.Provider value={{ count, setCount}}>
 
       <Example cities={cities}></Example>
       <CardForm addCity={addCity}></CardForm>
@@ -228,7 +229,7 @@ function App() {
         <button onClick={sendForm}>Invia</button>
       </form>
 
-    </>
+    </ProvaContext.Provider>
   )
 }
 
